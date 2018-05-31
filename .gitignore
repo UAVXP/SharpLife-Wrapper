@@ -1,2 +1,6 @@
 */.vs/*
 */packages/*
+*/Debug/*
+*/Release/*
+*/bin/*
+*/obj/*
