@@ -32,6 +32,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\GoldSource.FileSystem\GoldSource.FileSystem.csproj" />
     <ProjectReference Include="..\GoldSource.Shared\GoldSource.Shared.csproj" />
   </ItemGroup>
 

@@ -13,7 +13,7 @@
 *
 ****/
 
-namespace GoldSource.Shared.Engine.FileSystem
+namespace GoldSource.FileSystem
 {
     /// <summary>
     /// Represents the engine's filesystem

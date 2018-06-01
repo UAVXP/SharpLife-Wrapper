@@ -18,7 +18,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 
-namespace GoldSource.Shared.Engine.FileSystem
+namespace GoldSource.FileSystem
 {
     public sealed class FileSystem : IFileSystem
     {

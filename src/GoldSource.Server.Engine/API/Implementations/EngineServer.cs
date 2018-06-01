@@ -13,6 +13,7 @@
 *
 ****/
 
+using GoldSource.FileSystem;
 using GoldSource.Mathlib;
 using GoldSource.Server.Engine.Entities;
 using GoldSource.Server.Engine.Networking;
@@ -21,7 +22,6 @@ using GoldSource.Server.Engine.StudioModel;
 using GoldSource.Server.Engine.Wrapper.API;
 using GoldSource.Server.Engine.Wrapper.API.Interfaces;
 using GoldSource.Shared.Engine;
-using GoldSource.Shared.Engine.FileSystem;
 using GoldSource.Shared.Entities;
 using System;
 using System.Collections.Generic;

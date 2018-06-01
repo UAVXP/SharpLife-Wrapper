@@ -13,6 +13,7 @@
 *
 ****/
 
+using GoldSource.FileSystem;
 using GoldSource.Server.Engine.API;
 using GoldSource.Server.Engine.API.Implementations;
 using GoldSource.Server.Engine.CVar;
@@ -129,7 +130,7 @@ namespace GoldSource.Server.Engine.Wrapper
             EngineString.StringPool = StringPool;
 
             //Create interface implementations
-            FileSystem = new FileSystem();
+            FileSystem = new FileSystem.FileSystem();
 
             EngineServer = new EngineServer(EngineFuncs, StringPool, EntityDictionary, Globals, FileSystem);
 
