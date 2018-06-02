@@ -20,7 +20,7 @@ using System.Runtime.InteropServices;
 namespace GoldSource.Server.Engine.Wrapper.API.Interfaces
 {
     [StructLayout(LayoutKind.Sequential)]
-    internal sealed class ManagedAPI
+    internal sealed class ServerManagedAPI
     {
         internal enum MemoryType
         {

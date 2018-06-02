@@ -25,33 +25,33 @@ namespace GoldSource.Server.Engine.Wrapper.API
     internal static class Program
     {
         //Stored off so the unmanaged reference doesn't access freed memory
-        private static ManagedAPI ManagedAPI { get; set; }
+        private static ServerManagedAPI ManagedAPI { get; set; }
 
         internal static Wrapper Wrapper { get; private set; }
 
-        internal static void FreeMemory(ManagedAPI.MemoryType memoryType, IntPtr memory)
+        internal static void FreeMemory(ServerManagedAPI.MemoryType memoryType, IntPtr memory)
         {
             switch (memoryType)
             {
-                case ManagedAPI.MemoryType.ManagedAPI:
+                case ServerManagedAPI.MemoryType.ManagedAPI:
                     {
-                        Marshal.DestroyStructure<ManagedAPI>(memory);
+                        Marshal.DestroyStructure<ServerManagedAPI>(memory);
                         break;
                     }
 
-                case ManagedAPI.MemoryType.EntityAPI:
+                case ServerManagedAPI.MemoryType.EntityAPI:
                     {
                         Marshal.DestroyStructure<DLLFunctions>(memory);
                         break;
                     }
 
-                case ManagedAPI.MemoryType.NewEntityAPI:
+                case ServerManagedAPI.MemoryType.NewEntityAPI:
                     {
                         Marshal.DestroyStructure<NewDLLFunctions>(memory);
                         break;
                     }
 
-                case ManagedAPI.MemoryType.String:
+                case ServerManagedAPI.MemoryType.String:
                     {
                         //Free a string that was returned to native code
                         Marshal.FreeHGlobal(memory);
@@ -60,18 +60,18 @@ namespace GoldSource.Server.Engine.Wrapper.API
             }
         }
 
-        internal static bool Start(out ManagedAPI managedAPI)
+        internal static bool Start(out ServerManagedAPI managedAPI)
         {
             //Log nothing for now
             Logger.Instance = new Serilog.LoggerConfiguration().CreateLogger();
 
             Log.Message("Starting managed wrapper");
 
-            managedAPI = new ManagedAPI();
+            managedAPI = new ServerManagedAPI();
 
             try
             {
-                InterfaceUtils.InitializeFields(ManagedAPI.DelegateInstanceNamePrefix, managedAPI, typeof(Program));
+                InterfaceUtils.InitializeFields(ServerManagedAPI.DelegateInstanceNamePrefix, managedAPI, typeof(Program));
 
                 Log.Message("Managed wrapper started");
 
@@ -108,7 +108,7 @@ namespace GoldSource.Server.Engine.Wrapper.API
         {
             Log.Message("Request DLLFunctions interface");
 
-            if (InterfaceUtils.SetupInterface(ManagedAPI.DelegateInstanceNamePrefix, out pFunctionTable, Wrapper.DLLFunctions))
+            if (InterfaceUtils.SetupInterface(ServerManagedAPI.DelegateInstanceNamePrefix, out pFunctionTable, Wrapper.DLLFunctions))
             {
                 Wrapper.DLLFunctionsInterface = pFunctionTable;
                 return true;
@@ -121,7 +121,7 @@ namespace GoldSource.Server.Engine.Wrapper.API
         {
             Log.Message("Request NewDLLFunctions interface");
 
-            if (InterfaceUtils.SetupInterface(ManagedAPI.DelegateInstanceNamePrefix, out pFunctionTable, Wrapper.NewDLLFunctions))
+            if (InterfaceUtils.SetupInterface(ServerManagedAPI.DelegateInstanceNamePrefix, out pFunctionTable, Wrapper.NewDLLFunctions))
             {
                 Wrapper.NewDLLFunctionsInterface = pFunctionTable;
                 return true;
@@ -134,7 +134,7 @@ namespace GoldSource.Server.Engine.Wrapper.API
         {
             Log.Message("Request Engine Overrides interface");
 
-            if (InterfaceUtils.SetupInterface(ManagedAPI.DelegateInstanceNamePrefix, out pFunctionTable, Wrapper.EngineOverrides))
+            if (InterfaceUtils.SetupInterface(ServerManagedAPI.DelegateInstanceNamePrefix, out pFunctionTable, Wrapper.EngineOverrides))
             {
                 Wrapper.EngineOverridesInterface = pFunctionTable;
                 return true;
