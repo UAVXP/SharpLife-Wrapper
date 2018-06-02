@@ -1,0 +1,10 @@
+{
+  "profiles": {
+    "GoldSource.Server.Engine": {
+      "commandName": "Executable",
+      "executablePath": "C:\\Program Files (x86)\\Steam\\steamapps\\common\\Half-Life\\hl.exe",
+      "commandLineArgs": "-game sharplife -insecure +developer 2 -condebug",
+      "workingDirectory": "C:\\Program Files (x86)\\Steam\\steamapps\\common\\Half-Life"
+    }
+  }
+}

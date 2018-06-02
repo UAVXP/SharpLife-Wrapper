@@ -2,12 +2,14 @@
 #define __APIPROXY__
 
 using qboolean = int;
+using vec_t = float;
 
 #include "Public/archtypes.h"     // DAL
 #include "Common/netadr.h"
 #include "Common/Sequence.h"
 #include "Common/wrect.h"
 #include "Common/enums.h"
+#include "Dlls/vector.h"
 
 #define	MAX_ALIAS_NAME	32
 
@@ -44,7 +46,7 @@ typedef void (*HUD_IN_CLEARSTATES_FUNC)		( void );
 typedef void (*HUD_IN_ACCUMULATE_FUNC ) ( void );
 typedef void (*HUD_CL_CREATEMOVE_FUNC)		( float frametime, struct usercmd_s *cmd, int active );
 typedef int (*HUD_CL_ISTHIRDPERSON_FUNC) ( void );
-typedef void (*HUD_CL_GETCAMERAOFFSETS_FUNC )( float *ofs );
+typedef void (*HUD_CL_GETCAMERAOFFSETS_FUNC )( Vector& ofs );
 typedef struct kbutton_s * (*HUD_KB_FIND_FUNC) ( const char *name );
 typedef void ( *HUD_CAMTHINK_FUNC )( void );
 typedef void ( *HUD_CALCREF_FUNC ) ( struct ref_params_s *pparams );
@@ -60,7 +62,7 @@ typedef void ( *HUD_PROCESSPLAYERSTATE_FUNC )( struct entity_state_s *dst, const
 typedef void ( *HUD_TXFERPREDICTIONDATA_FUNC ) ( struct entity_state_s *ps, const struct entity_state_s *pps, struct clientdata_s *pcd, const struct clientdata_s *ppcd, struct weapon_data_s *wd, const struct weapon_data_s *pwd );
 typedef void ( *HUD_DEMOREAD_FUNC ) ( int size, unsigned char *buffer );
 typedef int ( *HUD_CONNECTIONLESS_FUNC )( const struct netadr_s *net_from, const char *args, char *response_buffer, int *response_buffer_size );
-typedef	int	( *HUD_GETHULLBOUNDS_FUNC ) ( int hullnumber, float *mins, float *maxs );
+typedef	int	( *HUD_GETHULLBOUNDS_FUNC ) ( int hullnumber, Vector& mins, Vector& maxs );
 typedef void (*HUD_FRAME_FUNC)		( double );
 typedef int (*HUD_KEY_EVENT_FUNC ) ( int eventcode, int keynum, const char *pszCurrentBinding );
 typedef void (*HUD_TEMPENTUPDATE_FUNC) ( double frametime, double client_time, double cl_gravity, struct tempent_s **ppTempEntFree, struct tempent_s **ppTempEntActive, 	int ( *Callback_AddVisibleEntity )( struct cl_entity_s *pEntity ),	void ( *Callback_TempEntPlaySound )( struct tempent_s *pTemp, float damp ) );
