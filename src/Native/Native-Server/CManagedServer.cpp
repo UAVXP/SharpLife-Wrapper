@@ -1,32 +1,17 @@
-#include "CLR/CCLRHostException.h"
 #include "CManagedServer.h"
 #include "ConfigurationInput.h"
 #include "DLLInterface.h"
 #include "interface.h"
 #include "Log.h"
-#include "ManagedInterface.h"
 #include "NewDLLInterface.h"
+#include "ServerManagedInterface.h"
 #include "Utility/InterfaceUtils.h"
 #include "Utility/StringUtils.h"
 
 namespace Wrapper
 {
-const std::string_view CManagedServer::CONFIG_FILENAME{ "cfg/SharpLife-Wrapper-Native.ini" };
-const std::wstring CManagedServer::WRAPPER_DIRECTORY{ L"dlls" };
-const std::wstring CManagedServer::CLRHOST_LIBRARY_NAME{ L"Native-CLRHost" };
-const std::wstring CManagedServer::LIBRARY_EXTENSION_NAME{ L".dll" };
-
 CManagedServer::CManagedServer() = default;
-
-CManagedServer::~CManagedServer()
-{
-	//If we've reached this point and there are still detours in the list, then we're crashing
-	//Detours can't patch the engine at this point, so just leak them instead so they don't trigger the patch
-	for( auto& detour : m_Detours )
-	{
-		detour.release();
-	}
-}
+CManagedServer::~CManagedServer() = default;
 
 CManagedServer& CManagedServer::Instance()
 {
@@ -44,15 +29,6 @@ std::string CManagedServer::GetGameDirectory() const
 	return szGameDir;
 }
 
-std::wstring CManagedServer::GetWideGameDirectory() const
-{
-	char szGameDir[ MAX_PATH ];
-
-	m_EngineFuncs.pfnGetGameDir( szGameDir );
-
-	return Utility::ToWideString( szGameDir );
-}
-
 bool CManagedServer::Initialize( const enginefuncs_t& engfuncsFromEngine, globalvars_t* pGlobalvars )
 {
 	memcpy( &m_EngineFuncs, &engfuncsFromEngine, sizeof( enginefuncs_t ) );
@@ -64,7 +40,7 @@ bool CManagedServer::Initialize( const enginefuncs_t& engfuncsFromEngine, global
 		return false;
 	}
 
-	Log::SetDebugInterfaceLoggingEnabled( m_Configuration.EnableDebugInterface );
+	Log::SetDebugInterfaceLoggingEnabled( GetConfiguration().EnableDebugInterface );
 
 	Log::Message( "StartManagedHost" );
 
@@ -74,9 +50,9 @@ bool CManagedServer::Initialize( const enginefuncs_t& engfuncsFromEngine, global
 		return false;
 	}
 
-	m_DLLFunctions.SharpLife = CreateDLLFunctionsInterface( m_Configuration );
-	m_NewDLLFunctions.SharpLife = CreateNewDLLFunctionsInterface( m_Configuration );
-	m_EngineOverrides.SharpLife = CreateEngineOverridesInterface( m_Configuration );
+	m_DLLFunctions.SharpLife = CreateDLLFunctionsInterface( GetConfiguration() );
+	m_NewDLLFunctions.SharpLife = CreateNewDLLFunctionsInterface( GetConfiguration() );
+	m_EngineOverrides.SharpLife = CreateEngineOverridesInterface( GetConfiguration() );
 
 	Log::Message( "LoadManagedWrapper" );
 
@@ -143,16 +119,16 @@ bool CManagedServer::Initialize( const enginefuncs_t& engfuncsFromEngine, global
 	Utility::SpliceFunctionTables( *m_EngineOverrides.Managed, m_EngineOverrides.SharpLife, m_EngineOverrides.ExportedToEngine );
 
 	//Enable our detours
-	AdjustEngineAddresses( m_Configuration, m_pGlobals );
+	AdjustEngineAddresses( GetConfiguration(), m_pGlobals );
 
-	if( !CreateDetours( m_Configuration, m_Detours ) )
+	if( !CreateDetours( GetConfiguration(), GetDetours() ) )
 	{
 		Log::Message( "Couldn't create all detours" );
 		return false;
 	}
 
 	//Enable all detours
-	for( const auto& detour : m_Detours )
+	for( const auto& detour : GetDetours() )
 	{
 		detour->EnableDetour();
 	}
@@ -162,7 +138,7 @@ bool CManagedServer::Initialize( const enginefuncs_t& engfuncsFromEngine, global
 
 void CManagedServer::Shutdown()
 {
-	m_Detours.clear();
+	GetDetours().clear();
 
 	ShutdownManagedWrapper();
 	ShutdownManagedHost();
@@ -172,83 +148,16 @@ void CManagedServer::FreeMarshalledString( const char* pszString )
 {
 	if( m_pManagedAPI )
 	{
-		m_pManagedAPI->pfnFreeMemory( ManagedAPI::MemoryType::String, const_cast<char*>( pszString ) );
+		m_pManagedAPI->pfnFreeMemory( ServerManagedAPI::MemoryType::String, const_cast<char*>( pszString ) );
 	}
-}
-
-bool CManagedServer::LoadConfiguration()
-{
-	auto config = Wrapper::LoadConfiguration( GetGameDirectory() + '/' + std::string{ CONFIG_FILENAME } );
-
-	if( config )
-	{
-		m_Configuration = std::move( config.value() );
-		return true;
-	}
-
-	return false;
-}
-
-bool CManagedServer::StartManagedHost()
-{
-	auto dllsPath = GetWideGameDirectory() + L'/' + WRAPPER_DIRECTORY;
-
-	dllsPath = Utility::GetAbsolutePath( dllsPath );
-
-	try
-	{
-		m_CLRHostLibrary = Utility::CLibrary( dllsPath + L'/' + CLRHOST_LIBRARY_NAME + LIBRARY_EXTENSION_NAME );
-
-		if( !m_CLRHostLibrary )
-		{
-			Log::Message( "ERROR - Couldn't load CLR host library" );
-			return false;
-		}
-
-		auto factory = Sys_GetFactory( m_CLRHostLibrary );
-
-		if( !factory )
-		{
-			Log::Message( "ERROR - Couldn't get CLR host factory" );
-			return false;
-		}
-
-		m_CLRHost.reset( static_cast<ICLRHostManager*>( factory( CLRHOSTMANAGER_INTERFACE_VERSION, nullptr ) ) );
-
-		if( !m_CLRHost->IsRunning() )
-		{
-			m_CLRHost->Start( dllsPath, m_Configuration.SupportedDotNetCoreVersions );
-		}
-	}
-	catch( const CLR::CCLRHostException e )
-	{
-		if( e.HasResultCode() )
-		{
-			Log::Message( "ERROR - %s\nError code:%x", e.what(), e.GetResultCode() );
-		}
-		else
-		{
-			Log::Message( "ERROR - %s", e.what() );
-		}
-
-		return false;
-	}
-
-	return true;
-}
-
-void CManagedServer::ShutdownManagedHost()
-{
-	m_CLRHost.release();
-	m_CLRHostLibrary = Utility::CLibrary{};
 }
 
 bool CManagedServer::LoadManagedWrapper()
 {
-	Log::Message( "Loading library %s", m_Configuration.ManagedAssemblyName.c_str() );
-	Log::Message( "Entry point is %s.%s", m_Configuration.ManagedEntryPointClass.c_str(), m_Configuration.ManagedEntryPointMethod.c_str() );
+	Log::Message( "Loading library %s", GetConfiguration().Server.EntryPoint.AssemblyName.c_str() );
+	Log::Message( "Entry point is %s.%s", GetConfiguration().Server.EntryPoint.Class.c_str(), GetConfiguration().Server.EntryPoint.Method.c_str() );
 
-	auto managedAPI = LoadManagedLibrary( m_Configuration, *m_CLRHost );
+	auto managedAPI = LoadServerManagedLibrary( GetConfiguration().Server.EntryPoint, GetCLRHost() );
 
 	if( managedAPI )
 	{
@@ -265,17 +174,17 @@ void CManagedServer::ShutdownManagedWrapper()
 		//Free the memory that was allocated for the api structures
 		if( nullptr != m_NewDLLFunctions.Managed )
 		{
-			m_pManagedAPI->pfnFreeMemory( ManagedAPI::MemoryType::NewEntityAPI, m_NewDLLFunctions.Managed );
+			m_pManagedAPI->pfnFreeMemory( ServerManagedAPI::MemoryType::NewEntityAPI, m_NewDLLFunctions.Managed );
 			m_NewDLLFunctions.Managed = nullptr;
 		}
 
 		if( nullptr != m_DLLFunctions.Managed )
 		{
-			m_pManagedAPI->pfnFreeMemory( ManagedAPI::MemoryType::EntityAPI, m_DLLFunctions.Managed );
+			m_pManagedAPI->pfnFreeMemory( ServerManagedAPI::MemoryType::EntityAPI, m_DLLFunctions.Managed );
 			m_DLLFunctions.Managed = nullptr;
 		}
 
-		m_pManagedAPI->pfnFreeMemory( ManagedAPI::MemoryType::ManagedAPI, m_pManagedAPI );
+		m_pManagedAPI->pfnFreeMemory( ServerManagedAPI::MemoryType::ManagedAPI, m_pManagedAPI );
 		m_pManagedAPI = nullptr;
 	}
 }

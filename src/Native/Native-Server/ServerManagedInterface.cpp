@@ -2,24 +2,24 @@
 #include "CLR/CCLRHostException.h"
 #include "ICLRHostManager.h"
 #include "Log.h"
-#include "ManagedInterface.h"
+#include "ServerManagedInterface.h"
 #include "Utility/StringUtils.h"
 
 namespace Wrapper
 {
-using ManagedEntryPoint = bool ( STDMETHODCALLTYPE* )( ManagedAPI** managedAPI );
+using ManagedEntryPoint = bool ( STDMETHODCALLTYPE* )( ServerManagedAPI** managedAPI );
 
-std::optional<ManagedAPI*> LoadManagedLibrary( const CConfiguration& configuration, ICLRHostManager& clrHost )
+std::optional<ServerManagedAPI*> LoadServerManagedLibrary( const CConfiguration::CManagedEntryPoint& entryPointConfig, ICLRHostManager& clrHost )
 {
 	try
 	{
 		auto entryPoint = reinterpret_cast<ManagedEntryPoint>( clrHost.LoadAssemblyAndGetEntryPoint(
-			Utility::ToWideString( configuration.ManagedAssemblyName ),
-			Utility::ToWideString( configuration.ManagedEntryPointClass ),
-			Utility::ToWideString( configuration.ManagedEntryPointMethod )
+			Utility::ToWideString( entryPointConfig.AssemblyName ),
+			Utility::ToWideString( entryPointConfig.Class ),
+			Utility::ToWideString( entryPointConfig.Method )
 		) );
 
-		ManagedAPI* pManagedAPI = nullptr;
+		ServerManagedAPI* pManagedAPI = nullptr;
 
 		const auto result = entryPoint( &pManagedAPI );
 

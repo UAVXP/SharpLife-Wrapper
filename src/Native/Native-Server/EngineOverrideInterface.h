@@ -9,14 +9,6 @@
 
 namespace Wrapper
 {
-struct DetourDestructor final
-{
-	void operator()( CDetour* pDetour )
-	{
-		pDetour->Destroy();
-	}
-};
-
 struct EngineOverrides
 {
 	void ( *pfnED_LoadFromFile )( char* data );

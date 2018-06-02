@@ -3,50 +3,18 @@ set( TARGET_NAME Native-Server )
 add_library( ${TARGET_NAME} SHARED )
 
 target_sources( ${TARGET_NAME} PRIVATE
-	Common/const.h
-	Common/crc.h
-	Common/cvardef.h
-	Common/entity_state.h
-	Common/in_buttons.h
-	Common/netadr.h
-	Common/pmtrace.h
-	Common/Sequence.h
-	Common/usercmd.h
-	Common/weaponinfo.h
-	Common/winsani_in.h
-	Common/winsani_out.h
-	Dlls/cdll_dll.h
-	Dlls/enginecallback.h
-	Dlls/extdll.h
-	Dlls/vector.h
-	Engine/custom.h
-	Engine/edict.h
-	Engine/eiface.h
-	Engine/progdefs.h
-	Engine/progs.h
-	PmShared/pm_debug.h
-	PmShared/pm_defs.h
-	PmShared/pm_info.h
-	PmShared/pm_materials.h
-	PmShared/pm_movevars.h
-	PmShared/pm_shared.h
-	Public/Steam/steamtypes.h
-	Public/archtypes.h
-	CConfiguration.h
 	CManagedServer.cpp
 	CManagedServer.h
-	ConfigurationInput.cpp
-	ConfigurationInput.h
 	DLLInterface.cpp
 	DLLInterface.h
 	EngineOverrideInterface.cpp
 	EngineOverrideInterface.h
-	ManagedInterface.cpp
-	ManagedInterface.h
 	NewDLLInterface.cpp
 	NewDLLInterface.h
 	ServerEngineInterface.cpp
 	ServerEngineInterface.h
+	ServerManagedInterface.cpp
+	ServerManagedInterface.h
 )
 
 get_target_property( sources ${TARGET_NAME} SOURCES )

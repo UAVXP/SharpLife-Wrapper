@@ -15,6 +15,24 @@ namespace Wrapper
 class CConfiguration final
 {
 public:
+	struct CManagedEntryPoint final
+	{
+		std::string AssemblyName;
+		std::string Class;
+		std::string Method;
+	};
+
+	struct CServer final
+	{
+		CManagedEntryPoint EntryPoint;
+	};
+
+	struct CClient final
+	{
+		CManagedEntryPoint EntryPoint;
+	};
+
+public:
 	CConfiguration() = default;
 	~CConfiguration() = default;
 	CConfiguration( CConfiguration&& ) = default;
@@ -32,9 +50,8 @@ public:
 	*/
 	std::vector<std::string> SupportedDotNetCoreVersions;
 
-	std::string ManagedAssemblyName;
-	std::string ManagedEntryPointClass;
-	std::string ManagedEntryPointMethod;
+	CServer Server;
+	CClient Client;
 
 	std::unordered_map<std::string, Utility::FUNCPTR> EngineOverrides;
 

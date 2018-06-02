@@ -119,8 +119,8 @@ ret name##Class::name(p1type p1name, p2type p2name, p3type p3name)
 class name##Class \
 { \
 public: \
-        ret name(p1type p1name, p2type p2name, p3type p3name, p4type p4name); \
-        static ret (name##Class::* name##_Actual)(p1type, p2type, p3type, p4type); \
+		ret name(p1type p1name, p2type p2name, p3type p3name, p4type p4name); \
+		static ret (name##Class::* name##_Actual)(p1type, p2type, p3type, p4type); \
 }; \
 ret (name##Class::* name##Class::name##_Actual)(p1type, p2type, p3type, p4type) = nullptr; \
 ret name##Class::name(p1type p1name, p2type p2name, p3type p3name, p4type p4name)
@@ -129,8 +129,8 @@ ret name##Class::name(p1type p1name, p2type p2name, p3type p3name, p4type p4name
 class name##Class \
 { \
 public: \
-        ret name(p1type p1name, p2type p2name, p3type p3name, p4type p4name, p5type p5name, p6type p6name, p7type p7name, p8type p8name); \
-        static ret (name##Class::* name##_Actual)(p1type, p2type, p3type, p4type, p5type, p6type, p7type, p8type); \
+		ret name(p1type p1name, p2type p2name, p3type p3name, p4type p4name, p5type p5name, p6type p6name, p7type p7name, p8type p8name); \
+		static ret (name##Class::* name##_Actual)(p1type, p2type, p3type, p4type, p5type, p6type, p7type, p8type); \
 }; \
 ret (name##Class::* name##Class::name##_Actual)(p1type, p2type, p3type, p4type, p5type, p6type, p7type, p8type) = nullptr; \
 ret name##Class::name(p1type p1name, p2type p2name, p3type p3name, p4type p4name, p5type p5name, p6type p6name, p7type p7name, p8type p8name)
@@ -364,5 +364,12 @@ inline void IA32_Write_Jump32_Abs(JitWriter *jit, unsigned int jmp, void *target
 	jit->outptr = oldptr;
 }
 
+struct DetourDestructor final
+{
+	void operator()( CDetour* pDetour )
+	{
+		pDetour->Destroy();
+	}
+};
 
 #endif // _INCLUDE_SOURCEMOD_DETOURS_H_

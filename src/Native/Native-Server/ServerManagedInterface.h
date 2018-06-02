@@ -1,5 +1,5 @@
-#ifndef WRAPPER_MANAGEDINTERFACE_H
-#define WRAPPER_MANAGEDINTERFACE_H
+#ifndef WRAPPER_SERVERMANAGEDINTERFACE_H
+#define WRAPPER_SERVERMANAGEDINTERFACE_H
 
 #include <optional>
 #include <string>
@@ -16,12 +16,13 @@
 namespace Wrapper
 {
 class CConfiguration;
+struct CConfiguration::CManagedEntryPoint;
 class ICLRHostManager;
 
 /**
 *	@brief Structure retrieved from managed libraries that lets us access its main native<->managed interface
 */
-struct ManagedAPI final
+struct ServerManagedAPI final
 {
 	enum class MemoryType
 	{
@@ -47,7 +48,7 @@ struct ManagedAPI final
 	GetEngineOverrides pfnGetEngineOverrides = nullptr;
 };
 
-std::optional<ManagedAPI*> LoadManagedLibrary( const CConfiguration& configuration, ICLRHostManager& clrHost );
+std::optional<ServerManagedAPI*> LoadServerManagedLibrary( const CConfiguration::CManagedEntryPoint& entryPointConfig, ICLRHostManager& clrHost );
 }
 
-#endif //WRAPPER_MANAGEDINTERFACE_H
+#endif //WRAPPER_SERVERMANAGEDINTERFACE_H

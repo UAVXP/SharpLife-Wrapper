@@ -2,7 +2,9 @@
 #define WRAPPER_CLR_CCLRHOSTEXCEPTION_H
 
 #include <stdexcept>
+#include "Common/winsani_in.h"
 #include <mscoree.h>
+#include "Common/winsani_out.h"
 
 namespace Wrapper
 {

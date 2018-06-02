@@ -23,6 +23,13 @@ Utility::FUNCPTR GetFunctionAddress( INIReader& reader, const std::string& szSec
 #endif
 }
 
+static void GetEntryPoint( const std::string& szSectionName, INIReader& reader, CConfiguration::CManagedEntryPoint& entryPoint )
+{
+	entryPoint.AssemblyName = reader.Get( szSectionName, "AssemblyName", "" );
+	entryPoint.Class = reader.Get( szSectionName, "Class", "" );
+	entryPoint.Method = reader.Get( szSectionName, "Method", "" );
+}
+
 std::optional<CConfiguration> LoadConfiguration( const std::string& szFileName )
 {
 	INIReader reader( szFileName );
@@ -51,9 +58,8 @@ std::optional<CConfiguration> LoadConfiguration( const std::string& szFileName )
 		}
 	}
 
-	config.ManagedAssemblyName = reader.Get( "Managed", "AssemblyName", "" );
-	config.ManagedEntryPointClass = reader.Get( "Managed", "EntryPointClass", "" );
-	config.ManagedEntryPointMethod = reader.Get( "Managed", "EntryPointMethod", "" );
+	GetEntryPoint( "Server-Managed", reader, config.Server.EntryPoint );
+	GetEntryPoint( "Client-Managed", reader, config.Client.EntryPoint );
 
 	const std::string engineOverrideNames[] = 
 	{

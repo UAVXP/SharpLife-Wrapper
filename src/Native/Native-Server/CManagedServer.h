@@ -5,39 +5,21 @@
 #include <string>
 #include <vector>
 
-#include "CConfiguration.h"
-#include "CDetour/detours.h"
+#include "CBaseManagedHost.h"
 #include "Dlls/extdll.h"
 #include "EngineOverrideInterface.h"
-#include "ICLRHostManager.h"
-#include "Utility/CLibrary.h"
 
 namespace Wrapper
 {
-struct ManagedAPI;
+struct ServerManagedAPI;
 
 /**
 *	@brief Manages the server managed code system
 */
-class CManagedServer final
+class CManagedServer final : public CBaseManagedHost
 {
 private:
-	//Helper type to store function tables provided by both SharpLife and managed code
-	template<typename FUNCTABLE>
-	struct FunctionTable final
-	{
-		FUNCTABLE SharpLife = {};
-		FUNCTABLE* Managed = nullptr;
-
-		//This is the spliced version containing a mix of managed code and SharpLife functions
-		//When we override functions in SharpLife, for example to handle game shutdown it will call the managed code version internally
-		FUNCTABLE ExportedToEngine = {};
-	};
-
-	static const std::string_view CONFIG_FILENAME;
-	static const std::wstring WRAPPER_DIRECTORY;
-	static const std::wstring CLRHOST_LIBRARY_NAME;
-	static const std::wstring LIBRARY_EXTENSION_NAME;
+	
 
 public:
 	CManagedServer();
@@ -45,9 +27,7 @@ public:
 
 	static CManagedServer& Instance();
 
-	std::string GetGameDirectory() const;
-
-	std::wstring GetWideGameDirectory() const;
+	std::string GetGameDirectory() const override;
 
 	enginefuncs_t* GetEngineFunctions() { return &m_EngineFuncs; }
 
@@ -70,12 +50,6 @@ public:
 	void FreeMarshalledString( const char* pszString );
 
 private:
-	bool LoadConfiguration();
-
-	bool StartManagedHost();
-
-	void ShutdownManagedHost();
-
 	bool LoadManagedWrapper();
 
 	void ShutdownManagedWrapper();
@@ -84,20 +58,12 @@ private:
 	enginefuncs_t m_EngineFuncs = {};
 	globalvars_t* m_pGlobals = nullptr;
 
-	CConfiguration m_Configuration;
-
-	//The host for the managed code runtime
-	Utility::CLibrary m_CLRHostLibrary;
-	std::unique_ptr<ICLRHostManager, ICLRHostMananagerDeleter> m_CLRHost;
-
 	//Exported by the managed library, used to communicate with managed code
-	ManagedAPI* m_pManagedAPI = nullptr;
+	ServerManagedAPI* m_pManagedAPI = nullptr;
 
 	FunctionTable<DLL_FUNCTIONS> m_DLLFunctions;
 	FunctionTable<NEW_DLL_FUNCTIONS> m_NewDLLFunctions;
 	FunctionTable<EngineOverrides> m_EngineOverrides;
-
-	std::vector<std::unique_ptr<CDetour, DetourDestructor>> m_Detours;
 
 private:
 	CManagedServer( const CManagedServer& ) = delete;
