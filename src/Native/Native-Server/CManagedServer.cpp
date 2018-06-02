@@ -2,6 +2,7 @@
 #include "CManagedServer.h"
 #include "ConfigurationInput.h"
 #include "DLLInterface.h"
+#include "interface.h"
 #include "Log.h"
 #include "ManagedInterface.h"
 #include "NewDLLInterface.h"
@@ -11,7 +12,9 @@
 namespace Wrapper
 {
 const std::string_view CManagedServer::CONFIG_FILENAME{ "cfg/SharpLife-Wrapper-Native.ini" };
-const std::wstring_view CManagedServer::WRAPPER_DIRECTORY{ L"dlls" };
+const std::wstring CManagedServer::WRAPPER_DIRECTORY{ L"dlls" };
+const std::wstring CManagedServer::CLRHOST_LIBRARY_NAME{ L"Native-CLRHost" };
+const std::wstring CManagedServer::LIBRARY_EXTENSION_NAME{ L".dll" };
 
 CManagedServer::CManagedServer() = default;
 
@@ -188,13 +191,34 @@ bool CManagedServer::LoadConfiguration()
 
 bool CManagedServer::StartManagedHost()
 {
-	auto dllsPath = GetWideGameDirectory() + L'/' + std::wstring{ WRAPPER_DIRECTORY };
+	auto dllsPath = GetWideGameDirectory() + L'/' + WRAPPER_DIRECTORY;
 
 	dllsPath = Utility::GetAbsolutePath( dllsPath );
 
 	try
 	{
-		m_CLRHost = std::make_unique<CLR::CCLRHost>( dllsPath, m_Configuration.SupportedDotNetCoreVersions );
+		m_CLRHostLibrary = Utility::CLibrary( dllsPath + L'/' + CLRHOST_LIBRARY_NAME + LIBRARY_EXTENSION_NAME );
+
+		if( !m_CLRHostLibrary )
+		{
+			Log::Message( "ERROR - Couldn't load CLR host library" );
+			return false;
+		}
+
+		auto factory = Sys_GetFactory( m_CLRHostLibrary );
+
+		if( !factory )
+		{
+			Log::Message( "ERROR - Couldn't get CLR host factory" );
+			return false;
+		}
+
+		m_CLRHost.reset( static_cast<ICLRHostManager*>( factory( CLRHOSTMANAGER_INTERFACE_VERSION, nullptr ) ) );
+
+		if( !m_CLRHost->IsRunning() )
+		{
+			m_CLRHost->Start( dllsPath, m_Configuration.SupportedDotNetCoreVersions );
+		}
 	}
 	catch( const CLR::CCLRHostException e )
 	{
@@ -216,6 +240,7 @@ bool CManagedServer::StartManagedHost()
 void CManagedServer::ShutdownManagedHost()
 {
 	m_CLRHost.release();
+	m_CLRHostLibrary = Utility::CLibrary{};
 }
 
 bool CManagedServer::LoadManagedWrapper()

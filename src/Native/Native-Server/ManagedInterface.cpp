@@ -1,6 +1,6 @@
 #include "CConfiguration.h"
-#include "CLR/CCLRHost.h"
 #include "CLR/CCLRHostException.h"
+#include "ICLRHostManager.h"
 #include "Log.h"
 #include "ManagedInterface.h"
 #include "Utility/StringUtils.h"
@@ -9,7 +9,7 @@ namespace Wrapper
 {
 using ManagedEntryPoint = bool ( STDMETHODCALLTYPE* )( ManagedAPI** managedAPI );
 
-std::optional<ManagedAPI*> LoadManagedLibrary( const CConfiguration& configuration, CLR::CCLRHost& clrHost )
+std::optional<ManagedAPI*> LoadManagedLibrary( const CConfiguration& configuration, ICLRHostManager& clrHost )
 {
 	try
 	{

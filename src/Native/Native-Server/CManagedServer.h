@@ -7,9 +7,10 @@
 
 #include "CConfiguration.h"
 #include "CDetour/detours.h"
-#include "CLR/CCLRHost.h"
 #include "Dlls/extdll.h"
 #include "EngineOverrideInterface.h"
+#include "ICLRHostManager.h"
+#include "Utility/CLibrary.h"
 
 namespace Wrapper
 {
@@ -34,7 +35,9 @@ private:
 	};
 
 	static const std::string_view CONFIG_FILENAME;
-	static const std::wstring_view WRAPPER_DIRECTORY;
+	static const std::wstring WRAPPER_DIRECTORY;
+	static const std::wstring CLRHOST_LIBRARY_NAME;
+	static const std::wstring LIBRARY_EXTENSION_NAME;
 
 public:
 	CManagedServer();
@@ -84,7 +87,8 @@ private:
 	CConfiguration m_Configuration;
 
 	//The host for the managed code runtime
-	std::unique_ptr<CLR::CCLRHost> m_CLRHost;
+	Utility::CLibrary m_CLRHostLibrary;
+	std::unique_ptr<ICLRHostManager, ICLRHostMananagerDeleter> m_CLRHost;
 
 	//Exported by the managed library, used to communicate with managed code
 	ManagedAPI* m_pManagedAPI = nullptr;

@@ -16,11 +16,7 @@
 namespace Wrapper
 {
 class CConfiguration;
-
-namespace CLR
-{
-class CCLRHost;
-}
+class ICLRHostManager;
 
 /**
 *	@brief Structure retrieved from managed libraries that lets us access its main native<->managed interface
@@ -51,7 +47,7 @@ struct ManagedAPI final
 	GetEngineOverrides pfnGetEngineOverrides = nullptr;
 };
 
-std::optional<ManagedAPI*> LoadManagedLibrary( const CConfiguration& configuration, CLR::CCLRHost& clrHost );
+std::optional<ManagedAPI*> LoadManagedLibrary( const CConfiguration& configuration, ICLRHostManager& clrHost );
 }
 
 #endif //WRAPPER_MANAGEDINTERFACE_H

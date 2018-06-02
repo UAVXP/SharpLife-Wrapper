@@ -2,7 +2,6 @@
 #include <memory>
 #include <wchar.h>
 
-#include "Dlls/extdll.h"
 #include "StringUtils.h"
 
 #ifdef WIN32
