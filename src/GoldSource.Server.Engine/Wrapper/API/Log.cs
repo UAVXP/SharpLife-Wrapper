@@ -13,8 +13,8 @@
 *
 ****/
 
+using GoldSource.Shared;
 using System;
-using System.IO;
 using System.Reflection;
 
 namespace GoldSource.Server.Engine.Wrapper.API
@@ -24,16 +24,16 @@ namespace GoldSource.Server.Engine.Wrapper.API
     /// </summary>
     internal static class Log
     {
-        private const string LOG_FILENAME = "SharpLifeWrapper-Managed.log";
+        public const string LogFileName = "SharpLifeWrapper-Managed.log";
 
         internal static void Message(string message)
         {
-            File.AppendAllText(LOG_FILENAME, $"[{DateTimeOffset.Now}]: {message}{Environment.NewLine}");
+            Logger.Instance.Information(message);
         }
 
         internal static void Exception(Exception e)
         {
-            Message($"Exception {e.GetType().Name}: {e.Message}\nStack trace:\n{e.StackTrace}");
+            Logger.Instance.Error(e, "Error");
 
             if (e is ReflectionTypeLoadException reflEx)
             {

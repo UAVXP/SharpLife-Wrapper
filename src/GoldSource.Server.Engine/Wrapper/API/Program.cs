@@ -17,6 +17,7 @@ using GoldSource.Server.Engine.API.Implementations;
 using GoldSource.Server.Engine.Wrapper.API.Interfaces;
 using GoldSource.Shared;
 using GoldSource.Shared.Wrapper.API;
+using Serilog;
 using System;
 using System.Runtime.InteropServices;
 
@@ -63,7 +64,9 @@ namespace GoldSource.Server.Engine.Wrapper.API
         internal static bool Start(out ServerManagedAPI managedAPI)
         {
             //Log nothing for now
-            Logger.Instance = new Serilog.LoggerConfiguration().CreateLogger();
+            Logger.Instance = new LoggerConfiguration()
+                .WriteTo.File(Log.LogFileName)
+                .CreateLogger();
 
             Log.Message("Starting managed wrapper");
 
