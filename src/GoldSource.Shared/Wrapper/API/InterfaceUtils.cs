@@ -99,7 +99,7 @@ namespace GoldSource.Shared.Wrapper.API
 
             if (method == null)
             {
-                throw new InitializeFieldException("Implementation method does not exist");
+                throw new InitializeFieldException($"Implementation method {name} does not exist");
             }
 
             if (implInstance == null && !method.IsStatic)
