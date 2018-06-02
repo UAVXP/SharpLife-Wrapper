@@ -13,7 +13,7 @@
 *
 ****/
 
-namespace GoldSource.Server.Engine.Networking
+namespace GoldSource.Shared.Engine.Networking
 {
     public enum NetAddressType
     {

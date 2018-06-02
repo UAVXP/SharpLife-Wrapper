@@ -18,7 +18,7 @@ using System.Collections.Generic;
 using System.Runtime.InteropServices;
 using System.Text;
 
-namespace GoldSource.Server.Engine.StudioModel
+namespace GoldSource.Shared.Engine.StudioModel
 {
     public sealed unsafe class StudioBoneController
     {

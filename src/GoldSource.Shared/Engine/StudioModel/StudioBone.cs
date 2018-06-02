@@ -13,36 +13,28 @@
 *
 ****/
 
-using System;
 using System.Runtime.InteropServices;
 
-namespace GoldSource.Server.Engine.StudioModel
+namespace GoldSource.Shared.Engine.StudioModel
 {
-    public sealed unsafe class StudioEvent
+    public sealed unsafe class StudioBone
     {
         [StructLayout(LayoutKind.Sequential)]
         internal struct Native
         {
-            internal int frame;
-            internal int eventId;
-
-            internal int type;
-            internal fixed byte options[64];
+            internal fixed byte name[32];  // bone name for symbolic links
+            internal int parent;     // parent bone
+            internal int flags;      // ??
+            internal fixed int bonecontroller[6];  // bone controller index, -1 == none
+            internal fixed float value[6]; // default DoF values
+            internal fixed float scale[6];   // scale for delta DoF values
         }
 
         internal Native* Data { get; }
 
-        internal StudioEvent(Native* nativeMemory)
+        internal StudioBone(Native* nativeMemory)
         {
             Data = nativeMemory;
         }
-
-        public int Frame => Data->frame;
-
-        public int EventId => Data->eventId;
-
-        public int Type => Data->type;
-
-        public string Options => Marshal.PtrToStringUTF8(new IntPtr(Data->options));
     }
 }

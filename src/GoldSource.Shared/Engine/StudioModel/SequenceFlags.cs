@@ -15,7 +15,7 @@
 
 using System;
 
-namespace GoldSource.Server.Engine.StudioModel
+namespace GoldSource.Shared.Engine.StudioModel
 {
     [Flags]
     public enum SequenceFlags

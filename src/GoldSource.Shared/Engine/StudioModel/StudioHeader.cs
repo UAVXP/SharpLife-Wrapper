@@ -14,19 +14,18 @@
 ****/
 
 using GoldSource.Mathlib;
-using GoldSource.Shared.Engine;
 using GoldSource.Shared.Wrapper.API;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.InteropServices;
 
-namespace GoldSource.Server.Engine.StudioModel
+namespace GoldSource.Shared.Engine.StudioModel
 {
     public sealed unsafe class StudioHeader
     {
         [StructLayout(LayoutKind.Sequential)]
-        internal struct Native
+        public struct Native
         {
             internal int id;
             internal int version;
@@ -83,7 +82,7 @@ namespace GoldSource.Server.Engine.StudioModel
 
         internal Native* Data { get; }
 
-        internal StudioHeader(Native* nativeMemory)
+        public StudioHeader(Native* nativeMemory)
         {
             Data = nativeMemory;
 

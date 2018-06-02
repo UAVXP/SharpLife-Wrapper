@@ -19,7 +19,7 @@ using System;
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
 
-namespace GoldSource.Server.Engine.StudioModel
+namespace GoldSource.Shared.Engine.StudioModel
 {
     public sealed unsafe class StudioSequence
     {

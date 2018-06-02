@@ -16,32 +16,33 @@
 using System;
 using System.Runtime.InteropServices;
 
-namespace GoldSource.Server.Engine.StudioModel
+namespace GoldSource.Shared.Engine.StudioModel
 {
-    public sealed unsafe class StudioBodyPart
+    public sealed unsafe class StudioEvent
     {
         [StructLayout(LayoutKind.Sequential)]
-        internal struct Native
+        public struct Native
         {
-            internal fixed byte name[64];
-            internal int nummodels;
-            internal int baseIndex;
-	        internal int modelindex; // index into models array
+            internal int frame;
+            internal int eventId;
+
+            internal int type;
+            internal fixed byte options[64];
         }
 
         internal Native* Data { get; }
 
-        internal StudioBodyPart(Native* nativeMemory)
+        internal StudioEvent(Native* nativeMemory)
         {
             Data = nativeMemory;
         }
 
-        public string Name => Marshal.PtrToStringUTF8(new IntPtr(Data->name));
+        public int Frame => Data->frame;
 
-        public int NumModels => Data->nummodels;
+        public int EventId => Data->eventId;
 
-        public int BaseIndex => Data->baseIndex;
+        public int Type => Data->type;
 
-        public int ModelIndex => Data->modelindex;
+        public string Options => Marshal.PtrToStringUTF8(new IntPtr(Data->options));
     }
 }

@@ -13,11 +13,14 @@
 *
 ****/
 
-namespace GoldSource.Server.Engine.Networking
+using System.Runtime.InteropServices;
+
+namespace GoldSource.Shared.Engine.Networking
 {
     public sealed unsafe class WeaponData
     {
-        internal struct Native
+        [StructLayout(LayoutKind.Sequential)]
+        public struct Native
         {
             internal int m_iId;
             internal int m_iClip;
@@ -49,7 +52,7 @@ namespace GoldSource.Server.Engine.Networking
 
         internal Native* Data { get; }
 
-        internal WeaponData(Native* nativeMemory)
+        public WeaponData(Native* nativeMemory)
         {
             Data = nativeMemory;
         }

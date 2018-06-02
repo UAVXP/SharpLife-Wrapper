@@ -15,7 +15,7 @@
 
 using System.Runtime.InteropServices;
 
-namespace GoldSource.Server.Engine.Networking
+namespace GoldSource.Shared.Engine.Networking
 {
     [StructLayout(LayoutKind.Sequential)]
     public unsafe struct IPv4Address

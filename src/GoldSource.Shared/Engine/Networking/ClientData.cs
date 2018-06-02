@@ -14,18 +14,17 @@
 ****/
 
 using GoldSource.Mathlib;
-using GoldSource.Shared.Engine;
 using GoldSource.Shared.Entities;
 using System;
 using System.Runtime.InteropServices;
 using System.Text;
 
-namespace GoldSource.Server.Engine
+namespace GoldSource.Shared.Engine.Networking
 {
     public sealed unsafe class ClientData
     {
         [StructLayout(LayoutKind.Sequential)]
-        internal struct Native
+        public struct Native
         {
             internal Vector origin;
             internal Vector velocity;
@@ -83,7 +82,7 @@ namespace GoldSource.Server.Engine
 
         internal Native* Data { get; }
 
-        internal ClientData(Native* nativeMemory)
+        public ClientData(Native* nativeMemory)
         {
             Data = nativeMemory;
         }

@@ -13,44 +13,35 @@
 *
 ****/
 
+using System;
 using System.Runtime.InteropServices;
 
-namespace GoldSource.Server.Engine.Networking
+namespace GoldSource.Shared.Engine.StudioModel
 {
-    public unsafe struct NetAddress
+    public sealed unsafe class StudioBodyPart
     {
         [StructLayout(LayoutKind.Sequential)]
         internal struct Native
         {
-            internal NetAddressType type;
-            internal IPv4Address ip;
-            internal fixed byte ipx[10]; //IPX is not used
-            internal ushort port;
+            internal fixed byte name[64];
+            internal int nummodels;
+            internal int baseIndex;
+	        internal int modelindex; // index into models array
         }
 
         internal Native* Data { get; }
 
-        internal NetAddress(Native* nativeMemory)
+        internal StudioBodyPart(Native* nativeMemory)
         {
             Data = nativeMemory;
         }
 
-        public NetAddressType Type
-        {
-            get => Data->type;
-            set => Data->type = value;
-        }
+        public string Name => Marshal.PtrToStringUTF8(new IntPtr(Data->name));
 
-        public IPv4Address IP
-        {
-            get => Data->ip;
-            set => Data->ip = value;
-        }
+        public int NumModels => Data->nummodels;
 
-        public ushort Port
-        {
-            get => Data->port;
-            set => Data->port = value;
-        }
+        public int BaseIndex => Data->baseIndex;
+
+        public int ModelIndex => Data->modelindex;
     }
 }

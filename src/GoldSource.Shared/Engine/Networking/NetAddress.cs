@@ -15,26 +15,42 @@
 
 using System.Runtime.InteropServices;
 
-namespace GoldSource.Server.Engine.StudioModel
+namespace GoldSource.Shared.Engine.Networking
 {
-    public sealed unsafe class StudioBone
+    public unsafe struct NetAddress
     {
         [StructLayout(LayoutKind.Sequential)]
-        internal struct Native
+        public struct Native
         {
-            internal fixed byte name[32];  // bone name for symbolic links
-            internal int parent;     // parent bone
-            internal int flags;      // ??
-            internal fixed int bonecontroller[6];  // bone controller index, -1 == none
-            internal fixed float value[6]; // default DoF values
-            internal fixed float scale[6];   // scale for delta DoF values
+            internal NetAddressType type;
+            internal IPv4Address ip;
+            internal fixed byte ipx[10]; //IPX is not used
+            internal ushort port;
         }
 
         internal Native* Data { get; }
 
-        internal StudioBone(Native* nativeMemory)
+        internal NetAddress(Native* nativeMemory)
         {
             Data = nativeMemory;
+        }
+
+        public NetAddressType Type
+        {
+            get => Data->type;
+            set => Data->type = value;
+        }
+
+        public IPv4Address IP
+        {
+            get => Data->ip;
+            set => Data->ip = value;
+        }
+
+        public ushort Port
+        {
+            get => Data->port;
+            set => Data->port = value;
         }
     }
 }
