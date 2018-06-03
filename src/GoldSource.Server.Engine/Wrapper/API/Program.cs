@@ -64,9 +64,13 @@ namespace GoldSource.Server.Engine.Wrapper.API
         internal static bool Start(out ServerManagedAPI managedAPI)
         {
             //Log nothing for now
-            Logger.Instance = new LoggerConfiguration()
-                .WriteTo.File(Log.LogFileName)
-                .CreateLogger();
+            //Client may have already initialized the logger
+            if (Logger.Instance == null)
+            {
+                Logger.Instance = new LoggerConfiguration()
+                    .WriteTo.File(Log.LogFileName)
+                    .CreateLogger();
+            }
 
             Log.Message("Starting managed wrapper");
 
