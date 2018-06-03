@@ -23,12 +23,27 @@ using GoldSource.Shared.Engine;
 using GoldSource.Shared.Engine.Networking;
 using GoldSource.Shared.Engine.PlayerPhysics;
 using GoldSource.Shared.Engine.StudioModel;
+using GoldSource.Shared.Wrapper.API.Interfaces;
 using System;
+using System.Runtime.InteropServices;
 
 namespace GoldSource.Client.Engine.Wrapper.API.Implementations
 {
     internal sealed unsafe class ClientDLLFunctions
     {
+        private IPlayerPhysics PlayerPhysics { get; }
+
+        private PlayerMove PlayerMove { get; set; }
+
+        private PlayerMoveFunctions PlayerMoveFunctions { get; set; }
+
+        private IEnginePhysics EnginePhysics { get; set; }
+
+        public ClientDLLFunctions(IPlayerPhysics playerPhysics)
+        {
+            PlayerPhysics = playerPhysics ?? throw new ArgumentNullException(nameof(playerPhysics));
+        }
+
         internal void Initialize()
         {
             //Never called
@@ -99,11 +114,20 @@ namespace GoldSource.Client.Engine.Wrapper.API.Implementations
             }
         }
 
+#pragma warning disable RCS1163 // Unused parameter.
         internal void HUD_ClientMove(PlayerMove.Native* ppmove, QBoolean server)
+#pragma warning restore RCS1163 // Unused parameter.
         {
             try
             {
+                if (PlayerMoveFunctions == null)
+                {
+                    //Get the functions separately so we can wrap them
+                    PlayerMoveFunctions = Marshal.PtrToStructure<PlayerMoveFunctions>(new IntPtr(&ppmove->firstFunctionOffset));
+                    EnginePhysics = new EnginePhysics(PlayerMoveFunctions);
+                }
 
+                PlayerPhysics.Move(PlayerMove, EnginePhysics);
             }
             catch (Exception e)
             {
@@ -116,7 +140,10 @@ namespace GoldSource.Client.Engine.Wrapper.API.Implementations
         {
             try
             {
+                //Create our wrapper and set the server field (not set by engine)
+                PlayerMove = new PlayerMove(ppmove, false);
 
+                PlayerPhysics.Init(PlayerMove);
             }
             catch (Exception e)
             {

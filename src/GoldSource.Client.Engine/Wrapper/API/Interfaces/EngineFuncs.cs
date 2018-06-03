@@ -13,12 +13,27 @@
 *
 ****/
 
+using System;
 using System.Runtime.InteropServices;
 
 namespace GoldSource.Client.Engine.Wrapper.API.Interfaces
 {
-    [StructLayout(LayoutKind.Sequential)]
+    //TODO: use sequential layout
+    [StructLayout(LayoutKind.Explicit)]
     internal sealed class EngineFuncs
     {
+        [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
+        internal delegate IntPtr GetGameDirectory();
+
+        [MarshalAs(UnmanagedType.FunctionPtr)]
+        [FieldOffset(284)]
+        internal GetGameDirectory pfnGetGameDirectory;
+
+        internal string GetGameDirectoryHelper()
+        {
+            var dir = pfnGetGameDirectory();
+
+            return Marshal.PtrToStringUTF8(dir);
+        }
     }
 }

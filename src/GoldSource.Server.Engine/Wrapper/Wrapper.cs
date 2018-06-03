@@ -133,12 +133,12 @@ namespace GoldSource.Server.Engine.Wrapper
 
         protected override void ResolveModInterfaces(IServiceProvider serviceProvider)
         {
-            ServerInterface = ServiceProvider.GetRequiredService<IServerInterface>();
+            ServerInterface = serviceProvider.GetRequiredService<IServerInterface>();
 
             //Initialized in Program in their respective Get* methods
-            DLLFunctions = ServiceProvider.GetRequiredService<API.Implementations.DLLFunctions>();
-            NewDLLFunctions = ServiceProvider.GetRequiredService<API.Implementations.NewDLLFunctions>();
-            EngineOverrides = ServiceProvider.GetRequiredService<API.Implementations.EngineOverrides>();
+            DLLFunctions = serviceProvider.GetRequiredService<API.Implementations.DLLFunctions>();
+            NewDLLFunctions = serviceProvider.GetRequiredService<API.Implementations.NewDLLFunctions>();
+            EngineOverrides = serviceProvider.GetRequiredService<API.Implementations.EngineOverrides>();
         }
 
         protected override void LoadMod()

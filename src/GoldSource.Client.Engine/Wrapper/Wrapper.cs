@@ -13,13 +13,15 @@
 *
 ****/
 
+using GoldSource.Client.Engine.API;
 using GoldSource.Client.Engine.Wrapper.API.Interfaces;
+using GoldSource.Shared.Wrapper;
 using Microsoft.Extensions.DependencyInjection;
 using System;
 
 namespace GoldSource.Client.Engine.Wrapper
 {
-    internal sealed class Wrapper
+    internal sealed class Wrapper : BaseWrapper
     {
         #region Native Interfaces
 
@@ -36,35 +38,15 @@ namespace GoldSource.Client.Engine.Wrapper
 
         #endregion
 
-        /// <summary>
-        /// The service provider containing all engine and game interfaces
-        /// </summary>
-        private IServiceProvider ServiceProvider { get; set; }
-
         public Wrapper(EngineFuncs engineFuncs)
+            : base(new EngineShared(engineFuncs))
         {
             EngineFuncs = engineFuncs ?? throw new ArgumentNullException(nameof(engineFuncs));
         }
 
-        public bool Initialize()
+        protected override IServiceCollection CreateServiceCollection()
         {
-            LoadConfiguration();
-
-            SetupFileSystem();
-
-            //if (!LoadMod(Configuration.ModInfo))
-            //{
-            //    return false;
-            //}
-
-            InitializeMod();
-
-            return true;
-        }
-
-        private IServiceCollection CreateServiceCollection()
-        {
-            IServiceCollection services = new ServiceCollection();
+            var services = base.CreateServiceCollection();
 
             //For internal use only, these types are not visible to mods
             services.AddSingleton(this);
@@ -75,46 +57,20 @@ namespace GoldSource.Client.Engine.Wrapper
             return services;
         }
 
-        private void ResolveModInterfaces()
+        protected override void ResolveModInterfaces(IServiceProvider serviceProvider)
         {
-            if (ServiceProvider == null)
-            {
-                throw new ArgumentNullException(nameof(ServiceProvider));
-            }
-
-            //ServerInterface = ServiceProvider.GetRequiredService<IServerInterface>();
+            //ServerInterface = serviceProvider.GetRequiredService<IServerInterface>();
 
             //Initialized in Program in their respective Get* methods
-            ClientDLLFunctions = ServiceProvider.GetRequiredService<API.Implementations.ClientDLLFunctions>();
+            ClientDLLFunctions = serviceProvider.GetRequiredService<API.Implementations.ClientDLLFunctions>();
         }
 
-        private void LoadConfiguration()
+        protected override void LoadMod()
         {
-
-        }
-
-        private void SetupFileSystem()
-        {
-
-        }
-
-        //private bool LoadMod(ModInfo modInfo)
-        //{
-        //    return true;
-        //}
-
-        private void InitializeMod()
-        {
-            //Both the engine and server register their interfaces, and then initialize eachother
-            var services = CreateServiceCollection();
-
-            //ModInterface.Startup(services);
-
-            ServiceProvider = services.BuildServiceProvider();
-
-            ResolveModInterfaces();
-
-            //ModInterface.Initialize(ServiceProvider);
+            if (!LoadModAssembly(Configuration.ModInfo.Client))
+            {
+                throw new InvalidOperationException("Could not load mod");
+            }
         }
     }
 }
