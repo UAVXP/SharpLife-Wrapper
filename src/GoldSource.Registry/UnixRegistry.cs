@@ -13,13 +13,12 @@
 *
 ****/
 
-using GoldSource.Server.Engine.Wrapper.API.Interfaces;
-using GoldSource.Shared.Engine;
+using Serilog;
 using System;
 using System.Collections.Generic;
 using System.IO;
 
-namespace GoldSource.Server.Engine.Wrapper.API.Implementations
+namespace GoldSource.Registry
 {
     internal sealed class UnixRegistry : IRegistry
     {
@@ -32,16 +31,20 @@ namespace GoldSource.Server.Engine.Wrapper.API.Implementations
 
         private string Name { get; }
 
+        private ILogger Logger { get; }
+
         private List<KV> KeyValues { get; } = new List<KV>();
 
-        internal UnixRegistry(string name)
+        internal UnixRegistry(string name, ILogger logger)
         {
             if (string.IsNullOrWhiteSpace(name))
             {
                 throw new ArgumentNullException(nameof(name));
             }
 
-            Name = $"{name}{Framework.UnixRegistryFileExtension}";
+            Name = name;
+
+            Logger = logger ?? throw new ArgumentNullException(nameof(logger));
         }
 
         private void LoadKeyValuesFromDisk()
@@ -70,8 +73,7 @@ namespace GoldSource.Server.Engine.Wrapper.API.Implementations
                 }
                 catch (Exception e)
                 {
-                    Log.Message("Exception reading registry from disk");
-                    Log.Exception(e);
+                    Logger.Error(e, "Exception reading registry from disk");
                 }
             }
         }
@@ -92,8 +94,7 @@ namespace GoldSource.Server.Engine.Wrapper.API.Implementations
                 }
                 catch (Exception e)
                 {
-                    Log.Message("Exception writing registry to disk");
-                    Log.Exception(e);
+                    Logger.Error(e, "Exception writing registry to disk");
                 }
             }
         }

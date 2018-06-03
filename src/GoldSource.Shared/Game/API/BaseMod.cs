@@ -16,7 +16,7 @@
 using Microsoft.Extensions.DependencyInjection;
 using System;
 
-namespace GoldSource.Server.Engine.Game.API
+namespace GoldSource.Shared.Game.API
 {
     /// <summary>
     /// Base class for mods

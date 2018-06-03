@@ -13,13 +13,13 @@
 *
 ****/
 
-namespace GoldSource.Server.Engine.Wrapper.Config
+using System.Xml.Serialization;
+
+namespace GoldSource.Shared.Engine.Config
 {
-    /// <summary>
-    /// Defines the configuration for the managed server wrapper
-    /// </summary>
-    public sealed class ServerWrapperConfiguration
+    public sealed class ModAssemblyInfo
     {
-        public ModInfo ModInfo { get; set; } = new ModInfo();
+        [XmlAttribute]
+        public string AssemblyName { get; set; }
     }
 }

@@ -13,12 +13,12 @@
 *
 ****/
 
-namespace GoldSource.Server.Engine.Wrapper.API.Interfaces
+namespace GoldSource.Registry
 {
     /// <summary>
     /// Interface to registry values
     /// </summary>
-    internal interface IRegistry
+    public interface IRegistry
     {
         int ReadInt(string key, int defaultValue = default);
 

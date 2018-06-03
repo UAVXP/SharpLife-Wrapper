@@ -13,16 +13,19 @@
 *
 ****/
 
-using System.Xml.Serialization;
+using Serilog;
 
-namespace GoldSource.Server.Engine.Wrapper.Config
+namespace GoldSource.Registry
 {
-    /// <summary>
-    /// Defines the configuration for the server mod interface
-    /// </summary>
-    public sealed class ModInfo
+    public static class RegistryFactory
     {
-        [XmlAttribute]
-        public string AssemblyName { get; set; }
+        public static IRegistry Create(string windowsRegistryPath, string unixRegistryFileName, ILogger logger)
+        {
+#if WINDOWS_BUILD
+            return new WindowsRegistry(windowsRegistryPath);
+#else
+            return new UnixRegistry(unixRegistryFileName, logger);
+#endif
+        }
     }
 }

@@ -13,11 +13,9 @@
 *
 ****/
 
-using GoldSource.Server.Engine.Wrapper.API.Interfaces;
-using Microsoft.Win32;
 using System;
 
-namespace GoldSource.Server.Engine.Wrapper.API.Implementations
+namespace GoldSource.Registry
 {
     //This depends on a Windows only package
 #if WINDOWS_BUILD
@@ -32,22 +30,22 @@ namespace GoldSource.Server.Engine.Wrapper.API.Implementations
 
         public int ReadInt(string key, int defaultValue = default)
         {
-            return (int)Registry.GetValue(Key, key, defaultValue);
+            return (int)Microsoft.Win32.Registry.GetValue(Key, key, defaultValue);
         }
 
         public void WriteInt(string key, int value)
         {
-            Registry.SetValue(Key, key, value);
+            Microsoft.Win32.Registry.SetValue(Key, key, value);
         }
 
         public string ReadString(string key, string defaultValue = default)
         {
-            return (string)Registry.GetValue(Key, key, defaultValue);
+            return (string)Microsoft.Win32.Registry.GetValue(Key, key, defaultValue);
         }
 
         public void WriteString(string key, string value)
         {
-            Registry.SetValue(Key, key, value);
+            Microsoft.Win32.Registry.SetValue(Key, key, value);
         }
     }
 #endif
