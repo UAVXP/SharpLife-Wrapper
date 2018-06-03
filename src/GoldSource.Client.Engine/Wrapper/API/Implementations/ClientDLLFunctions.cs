@@ -43,6 +43,7 @@ namespace GoldSource.Client.Engine.Wrapper.API.Implementations
             catch (Exception e)
             {
                 Log.Exception(e);
+                throw;
             }
         }
 
@@ -50,41 +51,39 @@ namespace GoldSource.Client.Engine.Wrapper.API.Implementations
         {
             try
             {
-
+                return 1;
             }
             catch (Exception e)
             {
                 Log.Exception(e);
+                throw;
             }
-
-            return 1;
         }
 
         internal int HUD_Redraw(float time, int intermission)
         {
             try
             {
-
+                return 1;
             }
             catch (Exception e)
             {
                 Log.Exception(e);
+                throw;
             }
-            return 1;
         }
 
         internal int HUD_UpdateClientData(HUDClientData.Native* pcldata, float flTime)
         {
             try
             {
-
+                return 1;
             }
             catch (Exception e)
             {
                 Log.Exception(e);
+                throw;
             }
-
-            return 1;
         }
 
         internal void HUD_Reset()
@@ -96,6 +95,7 @@ namespace GoldSource.Client.Engine.Wrapper.API.Implementations
             catch (Exception e)
             {
                 Log.Exception(e);
+                throw;
             }
         }
 
@@ -108,6 +108,7 @@ namespace GoldSource.Client.Engine.Wrapper.API.Implementations
             catch (Exception e)
             {
                 Log.Exception(e);
+                throw;
             }
         }
 
@@ -120,6 +121,7 @@ namespace GoldSource.Client.Engine.Wrapper.API.Implementations
             catch (Exception e)
             {
                 Log.Exception(e);
+                throw;
             }
         }
 
@@ -127,14 +129,13 @@ namespace GoldSource.Client.Engine.Wrapper.API.Implementations
         {
             try
             {
-
+                return 0;
             }
             catch (Exception e)
             {
                 Log.Exception(e);
+                throw;
             }
-
-            return 0;
         }
 
         internal void HUD_In_ActivateMouse()
@@ -146,6 +147,7 @@ namespace GoldSource.Client.Engine.Wrapper.API.Implementations
             catch (Exception e)
             {
                 Log.Exception(e);
+                throw;
             }
         }
 
@@ -158,6 +160,7 @@ namespace GoldSource.Client.Engine.Wrapper.API.Implementations
             catch (Exception e)
             {
                 Log.Exception(e);
+                throw;
             }
         }
 
@@ -170,6 +173,7 @@ namespace GoldSource.Client.Engine.Wrapper.API.Implementations
             catch (Exception e)
             {
                 Log.Exception(e);
+                throw;
             }
         }
 
@@ -182,6 +186,7 @@ namespace GoldSource.Client.Engine.Wrapper.API.Implementations
             catch (Exception e)
             {
                 Log.Exception(e);
+                throw;
             }
         }
 
@@ -194,6 +199,7 @@ namespace GoldSource.Client.Engine.Wrapper.API.Implementations
             catch (Exception e)
             {
                 Log.Exception(e);
+                throw;
             }
         }
 
@@ -206,6 +212,7 @@ namespace GoldSource.Client.Engine.Wrapper.API.Implementations
             catch (Exception e)
             {
                 Log.Exception(e);
+                throw;
             }
         }
 
@@ -213,14 +220,13 @@ namespace GoldSource.Client.Engine.Wrapper.API.Implementations
         {
             try
             {
-
+                return 0;
             }
             catch (Exception e)
             {
                 Log.Exception(e);
+                throw;
             }
-
-            return 0;
         }
 
         internal void HUD_CL_GetCameraOffsets(out Vector ofs)
@@ -234,6 +240,7 @@ namespace GoldSource.Client.Engine.Wrapper.API.Implementations
             catch (Exception e)
             {
                 Log.Exception(e);
+                throw;
             }
         }
 
@@ -241,14 +248,13 @@ namespace GoldSource.Client.Engine.Wrapper.API.Implementations
         {
             try
             {
-
+                return null;
             }
             catch (Exception e)
             {
                 Log.Exception(e);
+                throw;
             }
-
-            return null;
         }
 
         internal void HUD_CamThink()
@@ -260,6 +266,7 @@ namespace GoldSource.Client.Engine.Wrapper.API.Implementations
             catch (Exception e)
             {
                 Log.Exception(e);
+                throw;
             }
         }
 
@@ -272,6 +279,7 @@ namespace GoldSource.Client.Engine.Wrapper.API.Implementations
             catch (Exception e)
             {
                 Log.Exception(e);
+                throw;
             }
         }
 
@@ -279,14 +287,13 @@ namespace GoldSource.Client.Engine.Wrapper.API.Implementations
         {
             try
             {
-
+                return 0;
             }
             catch (Exception e)
             {
                 Log.Exception(e);
+                throw;
             }
-
-            return 0;
         }
 
         internal void HUD_CreateEntities()
@@ -298,6 +305,7 @@ namespace GoldSource.Client.Engine.Wrapper.API.Implementations
             catch (Exception e)
             {
                 Log.Exception(e);
+                throw;
             }
         }
 
@@ -310,6 +318,7 @@ namespace GoldSource.Client.Engine.Wrapper.API.Implementations
             catch (Exception e)
             {
                 Log.Exception(e);
+                throw;
             }
         }
 
@@ -322,6 +331,7 @@ namespace GoldSource.Client.Engine.Wrapper.API.Implementations
             catch (Exception e)
             {
                 Log.Exception(e);
+                throw;
             }
         }
 
@@ -334,6 +344,7 @@ namespace GoldSource.Client.Engine.Wrapper.API.Implementations
             catch (Exception e)
             {
                 Log.Exception(e);
+                throw;
             }
         }
 
@@ -346,6 +357,7 @@ namespace GoldSource.Client.Engine.Wrapper.API.Implementations
             catch (Exception e)
             {
                 Log.Exception(e);
+                throw;
             }
         }
 
@@ -358,6 +370,7 @@ namespace GoldSource.Client.Engine.Wrapper.API.Implementations
             catch (Exception e)
             {
                 Log.Exception(e);
+                throw;
             }
         }
 
@@ -370,6 +383,7 @@ namespace GoldSource.Client.Engine.Wrapper.API.Implementations
             catch (Exception e)
             {
                 Log.Exception(e);
+                throw;
             }
         }
 
@@ -382,6 +396,7 @@ namespace GoldSource.Client.Engine.Wrapper.API.Implementations
             catch (Exception e)
             {
                 Log.Exception(e);
+                throw;
             }
         }
 
@@ -394,6 +409,7 @@ namespace GoldSource.Client.Engine.Wrapper.API.Implementations
             catch (Exception e)
             {
                 Log.Exception(e);
+                throw;
             }
         }
 
@@ -406,6 +422,7 @@ namespace GoldSource.Client.Engine.Wrapper.API.Implementations
             catch (Exception e)
             {
                 Log.Exception(e);
+                throw;
             }
         }
 
@@ -413,14 +430,13 @@ namespace GoldSource.Client.Engine.Wrapper.API.Implementations
         {
             try
             {
-
+                return 0;
             }
             catch (Exception e)
             {
                 Log.Exception(e);
+                throw;
             }
-
-            return 0;
         }
 
         internal int HUD_GetHullBounds(PMHull hullnumber, out Vector mins, out Vector maxs)
@@ -429,14 +445,13 @@ namespace GoldSource.Client.Engine.Wrapper.API.Implementations
             maxs = new Vector();
             try
             {
-
+                return 0;
             }
             catch (Exception e)
             {
                 Log.Exception(e);
+                throw;
             }
-
-            return 0;
         }
 
         internal void HUD_Frame(double time)
@@ -448,6 +463,7 @@ namespace GoldSource.Client.Engine.Wrapper.API.Implementations
             catch (Exception e)
             {
                 Log.Exception(e);
+                throw;
             }
         }
 
@@ -455,14 +471,13 @@ namespace GoldSource.Client.Engine.Wrapper.API.Implementations
         {
             try
             {
-
+                return 0;
             }
             catch (Exception e)
             {
                 Log.Exception(e);
+                throw;
             }
-
-            return 0;
         }
 
         internal void HUD_TempEntUpdate(double frametime, double client_time, double cl_gravity,
@@ -477,6 +492,7 @@ namespace GoldSource.Client.Engine.Wrapper.API.Implementations
             catch (Exception e)
             {
                 Log.Exception(e);
+                throw;
             }
         }
 
@@ -484,14 +500,13 @@ namespace GoldSource.Client.Engine.Wrapper.API.Implementations
         {
             try
             {
-
+                return null;
             }
             catch (Exception e)
             {
                 Log.Exception(e);
+                throw;
             }
-
-            return null;
         }
 
         internal void HUD_VoiceStatus(int entindex, QBoolean bTalking)
@@ -503,6 +518,7 @@ namespace GoldSource.Client.Engine.Wrapper.API.Implementations
             catch (Exception e)
             {
                 Log.Exception(e);
+                throw;
             }
         }
 
@@ -515,6 +531,7 @@ namespace GoldSource.Client.Engine.Wrapper.API.Implementations
             catch (Exception e)
             {
                 Log.Exception(e);
+                throw;
             }
         }
 
@@ -522,16 +539,15 @@ namespace GoldSource.Client.Engine.Wrapper.API.Implementations
         {
             try
             {
+                ppinterface = null;
 
+                return 0;
             }
             catch (Exception e)
             {
                 Log.Exception(e);
+                throw;
             }
-
-            ppinterface = null;
-
-            return 0;
         }
 
         internal void HUD_ChatInputPosition(out int x, out int y)
@@ -546,6 +562,7 @@ namespace GoldSource.Client.Engine.Wrapper.API.Implementations
             catch (Exception e)
             {
                 Log.Exception(e);
+                throw;
             }
         }
 
